@@ -14,7 +14,7 @@ def test_empty():
 def test_params():
     lib.Log.set_config_path('config.yaml')
 
-    @lib.Log(profile='dev1')
+    @lib.Log(profile='dev')
     def demo1(secret):
         return secret
 

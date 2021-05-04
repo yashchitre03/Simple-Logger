@@ -22,6 +22,7 @@ loggers:
   dev:
     handlers: [console, file_handler]
     propagate: false
+    level: INFO
   test:
     handlers: [file_handler]
 root:
