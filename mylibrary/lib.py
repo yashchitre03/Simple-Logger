@@ -49,6 +49,8 @@ class Log:
         return wrapper
 
     def run(self, *args, **kwargs):
+        self.check_types(*args, **kwargs)
+
         execution = threading.Thread(target=self.execute, args=(*args, ), kwargs={**kwargs, })
         monitoring = threading.Thread(target=self.monitor, args=(execution, ))
 
@@ -59,13 +61,21 @@ class Log:
 
         return self.res
 
+    def check_types(self, *args, **kwargs):
+        sign = inspect.signature(self.fn)
+        arguments = sign.bind(*args, **kwargs).arguments
+        parameters = self.fn.__annotations__
+
+        for var in parameters.keys():
+            if var in arguments and not isinstance(arguments[var], parameters[var]):
+                self.logger.error(f'Type mismatch of `{var}` in `{self.fn.__name__}`: Expected {parameters[var]}; Received {type(arguments)}.')
+
     def execute(self, *args, **kwargs):
         with self.lock:
             self.logger.info(f'`{self.fn.__name__}` started executing')
 
         start = time.time()
         try:
-            print(args, kwargs)
             self.res = self.fn(*args, **kwargs)
         except Exception as e:
             with self.lock:
@@ -74,14 +84,15 @@ class Log:
         else:
             end = time.time()
             with self.lock:
-                self.logger.info(f'`{self.fn.__name__}` finished in {round(end - start, 4)} seconds')
+                self.logger.info(f'`{self.fn.__name__}` finished successfully in {round(end - start, 4)} seconds')
 
     def monitor(self, main_thread):
-        cpu_usage, mem_usage = 0, 0
+        cpu_usage, mem_usage, i = 0, 0, 1
         process = psutil.Process()
         while main_thread.is_alive():
-            cpu_usage = max(cpu_usage, process.cpu_percent() / psutil.cpu_count())
-            mem_usage = max(mem_usage, process.memory_info().rss / 1024 ** 2)
+            cpu_usage += process.cpu_percent() / psutil.cpu_count()
+            mem_usage += process.memory_info().rss / 1024 ** 2
+            i += 1
 
         with self.lock:
-            self.logger.info(f'`{self.fn.__name__}` Peak usage: CPU = {round(cpu_usage, 4)}%  |   Memory = {round(mem_usage, 4)}MB')
+            self.logger.info(f'`{self.fn.__name__}` average usage: CPU = {round(cpu_usage/i, 4)}%  |   Memory = {round(mem_usage/i, 4)}MB')
