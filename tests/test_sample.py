@@ -1,17 +1,21 @@
-from mylibrary import sample
+from mylibrary import lib
 
 
 def test_empty():
-    @sample.log()
-    def demo(secret):
-        print(secret)
+    lib.Log.set_config_path('config.yaml')
 
-    demo('Shhh')
+    @lib.Log(lambda: 'NOOOOOOOOOOOOOOOOOOOOOOOOOOOO', profile='dev')
+    def demo(secret):
+        raise Exception("OLA BOLA!")
+
+    print(demo('Shhh'))
 
 
 def test_params():
-    @sample.log('I am in!', 'Bye!')
-    def demo(secret):
-        print(secret)
+    lib.Log.set_config_path('config.yaml')
 
-    demo('Hacked')
+    @lib.Log(profile='dev1')
+    def demo1(secret):
+        return secret
+
+    print(demo1('Hacked'))
