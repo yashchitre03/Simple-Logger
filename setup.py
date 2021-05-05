@@ -1,6 +1,11 @@
 from setuptools import find_packages, setup
 import pathlib
 
+"""
+Contains all the information of the library. 
+This can be used to package and distribute the library on private networks or public package repositories like Pypi.
+"""
+
 DIR = pathlib.Path(__file__).parent
 README = (DIR / 'README.md').read_text()
 
