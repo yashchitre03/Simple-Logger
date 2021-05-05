@@ -68,7 +68,7 @@ class Log:
 
         for var in parameters.keys():
             if var in arguments and not isinstance(arguments[var], parameters[var]):
-                self.logger.error(f'Type mismatch of `{var}` in `{self.fn.__name__}`:'
+                self.logger.error(f'Type conflict of `{var}` in `{self.fn.__name__}`:'
                                   f' Expected {parameters[var]}; Received {type(arguments)}.')
 
     def execute(self, *args, **kwargs):
@@ -80,8 +80,10 @@ class Log:
             self.res = self.fn(*args, **kwargs)
         except Exception as e:
             with self.lock:
-                self.logger.error(f'{repr(e)} occurred in `{self.fn.__name__}`. Executing the backup function instead.')
-            self.res = self.backup_fn()
+                self.logger.error(f'{repr(e)} occurred in `{self.fn.__name__}`. '
+                                  f'Executing the backup function if provided.')
+            if self.backup_fn:
+                self.res = self.backup_fn()
         else:
             end = time.time()
             with self.lock:
