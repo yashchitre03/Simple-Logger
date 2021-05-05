@@ -1,5 +1,8 @@
 import time
+import pytest
 from simpleLogger import Log
+
+run_performance_test = False
 
 
 def setup():
@@ -15,6 +18,7 @@ def intensive_work(limit: int) -> None:
         temp.pop()
 
 
+@pytest.mark.skipif(run_performance_test is False, reason='Being time intensive, it is preferable to be run separately')
 def test_time():
     time_original, time_with_logging, impact = [], [], []
     decorated_fn = Log(profile='clean')(intensive_work)
