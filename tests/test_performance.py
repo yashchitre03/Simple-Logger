@@ -35,7 +35,7 @@ def test_time():
 
         try:
             impact.append((time_original[-1] - time_with_logging[-1]) * 100 / time_with_logging[-1])
-        except ZeroDivisionError as e:
+        except ZeroDivisionError:
             impact.append(0)
 
     print(sum(impact) / len(impact))
