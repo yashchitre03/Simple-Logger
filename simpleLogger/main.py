@@ -53,7 +53,7 @@ class Log:
                 self.logger = logging.getLogger(profile)
             else:
                 raise KeyError('Log configuration file is incorrect or does not contain the required keys')
-        except (OSError, IOError, KeyError):  # use default config
+        except (OSError, IOError, KeyError, TypeError):  # use default config
             self.logger = logging.getLogger('default_root')
 
     def __call__(self, fn):
