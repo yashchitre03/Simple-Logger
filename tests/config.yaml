@@ -1,5 +1,7 @@
 version: 1
 
+# Sample configuration file. Modified from the template provided by https://zetcode.com/python/logging/.
+
 formatters:
   simple:
     format: "[%(levelname)s] - %(message)s"
