@@ -4,11 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pyyaml = "*"
+psutil = "*"
 
 [dev-packages]
 pytest = "*"
-pyyaml = "*"
-psutil = "*"
+matplotlib = "*"
 
 [requires]
 python_version = "3.9"

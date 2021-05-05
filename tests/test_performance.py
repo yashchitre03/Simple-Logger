@@ -1,6 +1,7 @@
 import time
 import pytest
 from simpleLogger import Log
+from matplotlib import pyplot as plt
 
 run_performance_test = False
 
@@ -20,29 +21,33 @@ def intensive_work(limit: int) -> None:
 
 @pytest.mark.skipif(run_performance_test is False, reason='Being time intensive, it is preferable to be run separately')
 def test_time():
-    time_original, time_with_logging, impact = [], [], []
+    time_original, time_with_logging, impact, difference, indices = [], [], [], [], []
     decorated_fn = Log(profile='clean')(intensive_work)
-    arg = 100000
 
-    for i in (j**2 for j in range(1, 35)):
+    for i in (j**2 for j in range(10, 100, 10)):
         setup()
 
         start = time.time()
-        for times in range(i):
-            intensive_work(arg)
+        for times in range(100):
+            intensive_work(i)
         time_original.append(time.time() - start)
 
         start = time.time()
-        for times in range(i):
-            decorated_fn(arg)
+        for times in range(100):
+            decorated_fn(i)
         time_with_logging.append(time.time() - start)
 
         try:
-            impact.append((time_original[-1] - time_with_logging[-1]) * 100 / time_with_logging[-1])
+            impact.append((time_with_logging[-1] - time_original[-1]) * 100 / time_with_logging[-1])
         except ZeroDivisionError:
             impact.append(0)
 
-    print(sum(impact) / len(impact))
-    print(time_original[-1], time_with_logging[-1], impact[-1])
-    print(impact)
-    assert sum(impact) / len(impact) < 150
+        indices.append(i)
+        difference.append(time_with_logging[-1] - time_original[-1])
+
+    plt.plot(indices, impact)
+    plt.xlabel('Function complexity (loop size)')
+    plt.ylabel('Time difference (%)')
+    plt.title('Impact of function complexity')
+    plt.savefig('tests/plots/impact_plot.png', bbox_inches='tight')
+    plt.show()
