@@ -9,7 +9,7 @@ Set 'run_performance_test' to True if this test is to be run.
 """
 
 run_performance_test = False
-Log.set_config_path('config.yaml')
+Log.set_config_path('config.yaml')  # set the configuration file path
 
 
 def setup():
