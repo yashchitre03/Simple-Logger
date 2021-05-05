@@ -117,8 +117,8 @@ class Log:
         # Matches each parameter
         for var in parameters.keys():
             if var in arguments and not isinstance(arguments[var], parameters[var]):
-                self.logger.error(f'Type conflict of `{var}` in `{self.fn.__name__}`:'
-                                  f' Expected {parameters[var]}; Received {type(arguments)}.')
+                self.logger.warning(f'Type conflict of `{var}` in `{self.fn.__name__}`:'
+                                    f' Expected {parameters[var]}; Received {type(arguments[var])}.')
 
     def execute(self, *args, **kwargs):
         """
