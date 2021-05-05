@@ -68,7 +68,8 @@ class Log:
 
         for var in parameters.keys():
             if var in arguments and not isinstance(arguments[var], parameters[var]):
-                self.logger.error(f'Type mismatch of `{var}` in `{self.fn.__name__}`: Expected {parameters[var]}; Received {type(arguments)}.')
+                self.logger.error(f'Type mismatch of `{var}` in `{self.fn.__name__}`:'
+                                  f' Expected {parameters[var]}; Received {type(arguments)}.')
 
     def execute(self, *args, **kwargs):
         with self.lock:
@@ -90,9 +91,12 @@ class Log:
         cpu_usage, mem_usage, i = 0, 0, 1
         process = psutil.Process()
         while main_thread.is_alive():
-            cpu_usage += process.cpu_percent() / psutil.cpu_count()
-            mem_usage += process.memory_info().rss / 1024 ** 2
+            cpu_usage += process.cpu_percent()
+            mem_usage += process.memory_info().rss
             i += 1
 
+        cpu_usage /= (psutil.cpu_count() * i)
+        mem_usage /= (1024 ** 2 * i)
         with self.lock:
-            self.logger.info(f'`{self.fn.__name__}` average usage: CPU = {round(cpu_usage/i, 4)}%  |   Memory = {round(mem_usage/i, 4)}MB')
+            self.logger.info(f'`{self.fn.__name__}` average usage: CPU = {round(cpu_usage, 4)}%'
+                             f'  |   Memory = {round(mem_usage, 4)}MB')

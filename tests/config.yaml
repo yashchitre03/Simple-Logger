@@ -2,9 +2,9 @@ version: 1
 
 formatters:
   simple:
-    format: "%(asctime)s (%(name)s): %(message)s"
+    format: "%(asctime)s %(name)s: %(message)s"
   extended:
-    format: "[%(levelname)s] %(asctime)s (%(name)s): %(message)s"
+    format: "%(asctime)s %(name)s %(levelname)s: %(message)s"
 
 handlers:
   console:
@@ -15,15 +15,16 @@ handlers:
   file_handler:
     class: logging.FileHandler
     level: INFO
-    filename: test.log
+    filename: tests/logs/test.log
     formatter: extended
 
 loggers:
-  dev:
-    handlers: [console, file_handler]
-    propagate: false
+  clean:
+    handlers: [ file_handler ]
     level: INFO
-  test:
-    handlers: [file_handler]
+  detail:
+    handlers: [console, file_handler]
+    level: INFO
+
 root:
   handlers: [file_handler]
