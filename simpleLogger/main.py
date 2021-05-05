@@ -34,14 +34,13 @@ class Log:
             dirname = os.path.dirname(frame[1])  # get the directory of the caller.
             cls.CONFIG_FILE = dirname + os.sep + path
 
-    def __init__(self, backup_fn=None, profile=None):
+    def __init__(self, backup_fn=None, profile: str = None):
         """
         Constructor is called with all the arguments passed to the logging library.
         :param backup_fn: The function to execute if the main function fails (could be an anonymous function).
         :param profile: User can create many different logging styles in the configuration file,
          and provide its id as the profile.
         """
-
         self.backup_fn = backup_fn  # save the backup function
 
         try:  # if any issues are encountered in accessing the config file or the profile is not present,
@@ -149,7 +148,7 @@ class Log:
             with self.lock:
                 self.logger.info(f'`{self.fn.__name__}` finished successfully in {round(end - start, 4)} seconds')
 
-    def monitor(self, main_thread):
+    def monitor(self, main_thread: threading.Thread):
         """
         Monitors the resource usage of the main function being executed.
         :param main_thread: The thread of the main function.
