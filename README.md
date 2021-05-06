@@ -229,12 +229,14 @@ set `run_performance_test` to `True` to run them again, but they will be time-co
 The plot shows that as the model complexity increased the percentage difference between with 
 and without the library dropped significantly. The Y axis is how much time reduced when running without the library.
 Hence, this library is not suitable for calling responsive functions that are relatively simple.
+
 ![Complexity impact](https://github.com/yashchitre03/Simple-Logger/blob/main/tests/plots/impact_plot.png)
 
 ### Function calls
 This plot shows that the library uses constant extra time, and hence, increases linearly 
 with the increase in number of function calls. Hence, more function calls means more penalty on the performance 
 (even if constant for each call, it will keep adding up).
+
 ![Function call impact](https://github.com/yashchitre03/Simple-Logger/blob/main/tests/plots/num_plot.png)
 
 ## Future Scope
